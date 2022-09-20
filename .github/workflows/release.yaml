@@ -56,19 +56,19 @@ jobs:
             ARTIFACT_NAME: hello_linux.zip
             ARTIFACT_MIME: application/zip
             CMD_ZIP: |
-              zip --junk-paths hello_linux.zip dist/*
+              (cd dist/hello-world && zip -r hello_linux.zip *)
           - os: macos-latest
             TARGET: macos
             ARTIFACT_NAME: hello_macos.zip
             ARTIFACT_MIME: application/zip
             CMD_ZIP: |
-              zip --junk-paths hello_macos.zip dist/*
+              (cd dist/hello-world && zip -r hello_linux.zip *)
           - os: windows-latest
             TARGET: windows
             ARTIFACT_NAME: hello_windows.zip
             ARTIFACT_MIME: application/zip
             CMD_ZIP: |
-              7z a hello_windows.zip .\dist\*
+              7z a hello_windows.zip .\dist\hello-world\*
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -81,7 +81,7 @@ jobs:
           pip install -r requirements.txt pyinstaller
       - name: Build for ${{ matrix.TARGET }}
         run: |
-          pyinstaller src/cli.py --name hello-world --onefile
+          pyinstaller src/cli.py --name hello-world
       - name: Package .zip for ${{ matrix.TARGET }}
         run: ${{ matrix.CMD_ZIP }}
       - name: Load previously uploaded release URL
